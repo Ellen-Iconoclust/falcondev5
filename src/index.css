@@ -1,0 +1,86 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600;800&family=JetBrains+Mono&display=swap');
+
+@theme {
+  --font-display: "Anton", sans-serif;
+  --font-sans: "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  
+  --color-accent: #00FF00; /* Neon Green */
+  --color-dark: #000000;
+  --color-light: #FFFFFF;
+  --color-gray: #F0F0F0;
+}
+
+@layer base {
+  body {
+    @apply bg-light text-dark font-sans overflow-x-hidden;
+  }
+  
+  h1, h2, h3, h4 {
+    @apply font-display tracking-tight uppercase leading-none;
+  }
+}
+
+@layer utilities {
+  .brutalist-border {
+    border: 2px solid black;
+  }
+  
+  .brutalist-card {
+    border: 2px solid black;
+    background-color: white;
+    padding: 1.5rem;
+    transition: all 0.2s ease;
+  }
+  
+  .brutalist-card:hover {
+    box-shadow: 8px 8px 0px 0px rgba(0,0,0,1);
+  }
+  
+  .brutalist-button {
+    border: 2px solid black;
+    background-color: #00FF00;
+    padding: 0.75rem 2rem;
+    font-family: "Anton", sans-serif;
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    transition: all 0.2s ease;
+    display: inline-block;
+    cursor: pointer;
+  }
+  
+  .brutalist-button:hover {
+    background-color: black;
+    color: #00FF00;
+    transform: translate(-4px, -4px);
+    box-shadow: 4px 4px 0px 0px rgba(0,255,0,1);
+  }
+
+  .marquee-container {
+    overflow: hidden;
+    white-space: nowrap;
+    background-color: black;
+    color: white;
+    padding: 1rem 0;
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+  }
+
+  .marquee-content {
+    display: inline-block;
+    animation: marquee 80s linear infinite;
+    font-family: "Anton", sans-serif;
+    font-size: 2.25rem;
+    text-transform: uppercase;
+  }
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 80s linear infinite;
+}
