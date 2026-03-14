@@ -127,16 +127,26 @@ const ProjectPage = () => {
             </motion.div>
 
             <div className="space-y-8">
-              <div className="space-y-4">
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="space-y-4"
+              >
                 <span className="font-mono text-sm uppercase tracking-widest bg-dark text-light px-2 py-1">
                   {project.category}
                 </span>
                 <p className="text-xl sm:text-3xl leading-tight font-medium max-w-3xl">
                   {project.description}
                 </p>
-              </div>
+              </motion.div>
 
-              <div className="space-y-4">
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+                className="space-y-4"
+              >
                 <h3 className="font-display text-2xl uppercase border-b-2 border-dark pb-2">Technologies</h3>
                 <div className="flex flex-wrap gap-3">
                   {project.tags.map((tag, i) => (
@@ -145,7 +155,7 @@ const ProjectPage = () => {
                     </span>
                   ))}
                 </div>
-              </div>
+              </motion.div>
             </div>
           </div>
 
