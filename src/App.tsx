@@ -29,7 +29,7 @@ import {
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import AboutPage from './pages/AboutPage';
 import ProjectPage from './pages/ProjectPage';
 
@@ -56,9 +56,9 @@ const Navbar = () => {
   const isExpanded = isHeroActive || isHovered;
 
   const navLinks = [
-    { name: 'Work', href: '#work' },
-    { name: 'Stack', href: '#stack' },
-    { name: 'Contact', href: '#contact' },
+    { name: 'Work', href: '#work-section' },
+    { name: 'Stack', href: '#stack-section' },
+    { name: 'Contact', href: '#contact-section' },
     { name: 'About', href: '/about', isLink: true },
   ];
 
@@ -177,7 +177,7 @@ const Hero = () => {
   const heroRef = useRef<HTMLDivElement>(null);
 
   return (
-    <section ref={heroRef} className="min-h-screen flex flex-col items-center justify-center pt-32 sm:pt-48 pb-12 sm:pb-24 px-4 sm:px-6 bg-light">
+    <section id="hero" ref={heroRef} className="min-h-screen flex flex-col items-center justify-center pt-32 sm:pt-48 pb-12 sm:pb-24 px-4 sm:px-6 bg-light">
       <div className="max-w-7xl w-full">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 border-2 border-dark">
           <div className="lg:col-span-12 p-8 sm:p-16 lg:py-24 flex flex-col justify-between">
@@ -208,7 +208,7 @@ const Hero = () => {
               <p className="max-w-md font-sans text-lg sm:text-xl font-medium leading-tight">
                 Building high-performance digital systems with brutalist precision and modern aesthetics.
               </p>
-              <a href="#contact" className="brutalist-button w-fit sm:w-auto text-lg sm:text-2xl text-center whitespace-nowrap">Start Project</a>
+              <a href="#contact-section" className="brutalist-button w-fit sm:w-auto text-lg sm:text-2xl text-center whitespace-nowrap">Start Project</a>
             </div>
           </div>
         </div>
@@ -240,7 +240,7 @@ const Work = () => {
   ];
 
   return (
-    <section id="work" className="py-16 sm:py-24 px-4 sm:px-6 bg-light">
+    <section id="work-section" className="py-16 sm:py-24 px-4 sm:px-6 bg-light">
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-end mb-12 sm:mb-16">
           <h2 className="text-6xl sm:text-8xl lg:text-[10rem]">WORK</h2>
@@ -279,7 +279,7 @@ const Stack = () => {
   ];
 
   return (
-    <section id="stack" className="py-16 sm:py-24 px-4 sm:px-6 bg-dark text-light">
+    <section id="stack-section" className="py-16 sm:py-24 px-4 sm:px-6 bg-dark text-light">
       <div className="max-w-7xl mx-auto">
         <h2 className="text-6xl sm:text-8xl lg:text-[10rem] mb-12 sm:mb-20 text-accent">STACK</h2>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 sm:gap-20">
@@ -320,7 +320,7 @@ const Stack = () => {
 };
 
 const Contact = () => (
-  <section id="contact" className="py-16 sm:py-24 px-4 sm:px-6 bg-light">
+  <section id="contact-section" className="py-16 sm:py-24 px-4 sm:px-6 bg-light">
     <div className="max-w-7xl mx-auto border-2 border-dark p-8 sm:p-12 flex flex-col lg:flex-row justify-between items-center gap-10 sm:gap-12">
       <h2 className="text-6xl sm:text-7xl lg:text-9xl leading-none text-center lg:text-left">LET'S <br />CONNECT</h2>
       <div className="space-y-6 sm:space-y-8 w-full lg:w-auto text-center lg:text-left">
@@ -369,11 +369,26 @@ const HomePage = () => {
 };
 
 export default function App() {
+  const location = useLocation();
+  const lenisRef = useRef<Lenis | null>(null);
+
   useEffect(() => {
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
     });
+
+    lenisRef.current = lenis;
+
+    // Force scroll to top on initial load
+    window.scrollTo(0, 0);
+    lenis.scrollTo(0, { immediate: true });
+
+    // Small delay to ensure it sticks
+    const timer = setTimeout(() => {
+      window.scrollTo(0, 0);
+      lenis.scrollTo(0, { immediate: true });
+    }, 100);
 
     function raf(time: number) {
       lenis.raf(time);
@@ -396,19 +411,31 @@ export default function App() {
 
     return () => {
       lenis.destroy();
+      clearTimeout(timer);
       document.removeEventListener('click', handleAnchorClick);
     };
   }, []);
 
+  useEffect(() => {
+    if (location.hash && lenisRef.current) {
+      // Small delay to ensure the DOM is ready if navigating between pages
+      setTimeout(() => {
+        lenisRef.current?.scrollTo(location.hash, { immediate: true });
+      }, 100);
+    } else if (lenisRef.current) {
+      setTimeout(() => {
+        lenisRef.current?.scrollTo(0, { immediate: true });
+      }, 50);
+    }
+  }, [location.pathname, location.hash]);
+
   return (
-    <BrowserRouter>
-      <div className="min-h-screen selection:bg-accent selection:text-dark">
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/project/:slug" element={<ProjectPage />} />
-        </Routes>
-      </div>
-    </BrowserRouter>
+    <div className="min-h-screen selection:bg-accent selection:text-dark">
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/project/:slug" element={<ProjectPage />} />
+      </Routes>
+    </div>
   );
 }
