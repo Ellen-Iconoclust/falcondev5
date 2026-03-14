@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Github, Twitter, Linkedin, Mail, Code2, Cpu, Globe, Zap, Music } from 'lucide-react';
-import Lenis from 'lenis';
 
 const BentoItem = ({ children, className, delay = 0 }: { children: React.ReactNode, className?: string, delay?: number }) => (
   <motion.div
@@ -17,13 +16,7 @@ const BentoItem = ({ children, className, delay = 0 }: { children: React.ReactNo
 
 export default function AboutPage() {
   useEffect(() => {
-    const lenis = new Lenis();
-    function raf(time: number) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
-    requestAnimationFrame(raf);
-    return () => lenis.destroy();
+    window.scrollTo(0, 0);
   }, []);
 
   return (
