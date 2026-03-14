@@ -178,7 +178,7 @@ const Hero = () => {
 
   return (
     <section id="hero" ref={heroRef} className="min-h-screen flex flex-col items-center justify-center pt-24 sm:pt-32 pb-12 sm:pb-24 px-4 sm:px-6 bg-light">
-      <div className="max-w-7xl w-full -translate-y-2 sm:-translate-y-3">
+      <div className="max-w-7xl w-full -translate-y-2 sm:-translate-y-3 lg:-translate-y-1">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 border-2 border-dark">
           <div className="lg:col-span-12 p-6 sm:p-10 lg:py-12 flex flex-col justify-between">
             <div className="space-y-6 sm:space-y-8">
