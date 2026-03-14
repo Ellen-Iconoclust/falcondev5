@@ -23,12 +23,17 @@ export default function AboutPage() {
     <div className="min-h-screen bg-light p-4 sm:p-8 selection:bg-accent selection:text-dark">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex justify-between items-center mb-12">
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="flex justify-between items-center mb-12"
+        >
           <Link to="/" className="brutalist-button flex items-center gap-2 !py-2 !px-4 text-lg">
             <ArrowLeft size={20} /> Back
           </Link>
           <h1 className="text-4xl sm:text-6xl font-display uppercase tracking-tighter">About Me</h1>
-        </div>
+        </motion.div>
 
         {/* Bento Grid */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 sm:gap-6">
