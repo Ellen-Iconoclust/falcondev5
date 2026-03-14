@@ -34,7 +34,7 @@ export default function AboutPage() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 sm:gap-6">
           
           {/* Profile Photo & Intro */}
-          <BentoItem className="md:col-span-2 md:row-span-2 flex flex-col items-center justify-center text-center p-12 bg-dark text-light">
+          <BentoItem className="md:col-span-2 md:row-span-2 flex flex-col items-center justify-center text-center p-12 bg-light text-dark">
             <div className="w-48 h-48 sm:w-64 sm:h-64 rounded-full border-4 border-accent overflow-hidden mb-8">
               <img 
                 src="https://picsum.photos/seed/ellen-profile/500/500" 
@@ -44,7 +44,7 @@ export default function AboutPage() {
               />
             </div>
             <h2 className="text-4xl sm:text-5xl font-display mb-4 text-dark">ELLEN</h2>
-            <p className="font-mono text-lg sm:text-xl opacity-80">
+            <p className="font-mono text-lg sm:text-xl text-dark">
               Full-Stack Engineer & Digital Architect based in the digital void.
             </p>
           </BentoItem>
