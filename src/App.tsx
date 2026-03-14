@@ -326,7 +326,7 @@ const Contact = () => (
       <div className="space-y-6 sm:space-y-8 w-full lg:w-auto text-center lg:text-left">
         <div className="flex flex-col gap-2">
           <span className="font-mono uppercase text-xs sm:text-sm opacity-50">Email</span>
-          <a href="mailto:ellen@dev.com" className="text-3xl sm:text-4xl lg:text-6xl hover:text-accent active:text-accent transition-colors break-all">ELLEN@DEV.COM</a>
+          <a href="mailto:ellen@dev.com" className="text-3xl sm:text-4xl lg:text-6xl hover:text-accent active:text-accent transition-colors break-all">elisapravin@gmail.com</a>
         </div>
         <div className="flex gap-4 sm:gap-8 justify-center lg:justify-start">
           {[Github, Twitter, Linkedin].map((Icon, i) => (
