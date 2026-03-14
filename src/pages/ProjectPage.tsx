@@ -79,7 +79,7 @@ const ProjectPage = () => {
       {/* Navigation */}
       <nav className="fixed top-0 left-0 w-full z-50 p-6 sm:p-8 flex justify-between items-center pointer-events-none">
         <Link 
-          to="/" 
+          to="/#work-section" 
           className="pointer-events-auto bg-light border-2 border-dark p-3 hover:bg-dark hover:text-accent transition-all group"
         >
           <ArrowLeft className="group-hover:-translate-x-1 transition-transform" />
@@ -90,13 +90,32 @@ const ProjectPage = () => {
       </nav>
 
       <main className="pt-32 pb-24 px-4 sm:px-6 max-w-7xl mx-auto">
+        {/* Title Section */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-12 sm:mb-16">
+          <motion.h1 
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="text-5xl sm:text-8xl lg:text-[10rem] leading-none break-words"
+          >
+            {project.title}
+          </motion.h1>
+          <motion.span 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="font-mono text-xl sm:text-3xl opacity-50"
+          >
+            {project.year}
+          </motion.span>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-          {/* Left Column: Image & Title */}
-          <div className="lg:col-span-6 space-y-8">
+          {/* Main Content: Image & Description */}
+          <div className="lg:col-span-8 space-y-12">
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="brutalist-card p-0 overflow-hidden aspect-[4/3] relative group"
+              className="brutalist-card p-0 overflow-hidden aspect-video relative group"
             >
               <img 
                 src={project.image} 
@@ -106,44 +125,18 @@ const ProjectPage = () => {
               />
               <div className="absolute inset-0 border-4 border-dark pointer-events-none" />
             </motion.div>
-            
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
-              <motion.h1 
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                className="text-4xl sm:text-8xl lg:text-9xl leading-none"
-              >
-                {project.title}
-              </motion.h1>
-              <motion.span 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.2 }}
-                className="font-mono text-xl sm:text-2xl opacity-50"
-              >
-                {project.year}
-              </motion.span>
-            </div>
-          </div>
 
-          {/* Right Column: Info & Description */}
-          <div className="lg:col-span-6 flex flex-col justify-between">
-            <motion.div 
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.1 }}
-              className="space-y-12"
-            >
+            <div className="space-y-8">
               <div className="space-y-4">
                 <span className="font-mono text-sm uppercase tracking-widest bg-dark text-light px-2 py-1">
                   {project.category}
                 </span>
-                <p className="text-xl sm:text-2xl leading-tight font-medium">
+                <p className="text-xl sm:text-3xl leading-tight font-medium max-w-3xl">
                   {project.description}
                 </p>
               </div>
 
-              <div className="space-y-6">
+              <div className="space-y-4">
                 <h3 className="font-display text-2xl uppercase border-b-2 border-dark pb-2">Technologies</h3>
                 <div className="flex flex-wrap gap-3">
                   {project.tags.map((tag, i) => (
@@ -153,34 +146,36 @@ const ProjectPage = () => {
                   ))}
                 </div>
               </div>
-            </motion.div>
+            </div>
+          </div>
 
+          {/* Sidebar/Actions */}
+          <div className="lg:col-span-4 flex flex-col justify-end">
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="mt-16 pt-8 border-t-2 border-dark flex flex-col sm:flex-row gap-4"
+              className="pt-8 border-t-2 lg:border-t-0 lg:border-l-2 border-dark lg:pl-8 flex flex-col gap-6"
             >
               <a 
                 href={project.visitUrl} 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="brutalist-button flex items-center justify-center gap-3 text-2xl w-fit px-10"
+                className="brutalist-button flex items-center justify-center gap-2 text-xl sm:text-2xl w-full py-4 sm:py-6"
               >
-                VISIT PROJECT <ExternalLink size={24} />
+                VISIT PROJECT <ExternalLink className="w-5 h-5 sm:w-6 sm:h-6" />
               </a>
-              <div className="flex gap-4">
-                <button className="p-4 border-2 border-dark hover:bg-dark hover:text-accent transition-all">
-                  <Github size={32} />
+              <div className="flex gap-4 justify-center lg:justify-start">
+                <button className="flex-1 p-4 sm:p-6 border-2 border-dark hover:bg-dark hover:text-accent transition-all flex justify-center">
+                  <Github className="w-6 h-6 sm:w-8 sm:h-8" />
                 </button>
-                <button className="p-4 border-2 border-dark hover:bg-dark hover:text-accent transition-all">
-                  <Globe size={32} />
+                <button className="flex-1 p-4 sm:p-6 border-2 border-dark hover:bg-dark hover:text-accent transition-all flex justify-center">
+                  <Globe className="w-6 h-6 sm:w-8 sm:h-8" />
                 </button>
               </div>
             </motion.div>
           </div>
         </div>
-
       </main>
 
       {/* Footer */}
