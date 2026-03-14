@@ -50,7 +50,7 @@ export default function AboutPage() {
                 referrerPolicy="no-referrer"
               />
             </div>
-            <h2 className="text-4xl sm:text-5xl font-display mb-4 text-accent">ELLEN</h2>
+            <h2 className="text-4xl sm:text-5xl font-display mb-4 text-dark">ELLEN</h2>
             <p className="font-mono text-lg sm:text-xl opacity-80">
               Full-Stack Engineer & Digital Architect based in the digital void.
             </p>
@@ -104,7 +104,7 @@ export default function AboutPage() {
           {/* Socials */}
           <BentoItem className="md:col-span-2 bg-light border-2 border-dark p-8 flex items-center justify-around" delay={0.5}>
             {[Github, Twitter, Linkedin, Mail].map((Icon, i) => (
-              <a key={i} href="#" className="p-4 border-2 border-dark hover:bg-dark hover:text-accent transition-all">
+              <a key={i} href="#" className="p-4 border-2 border-dark hover:bg-dark hover:text-accent active:bg-dark active:text-accent transition-all">
                 <Icon size={32} />
               </a>
             ))}
@@ -116,7 +116,7 @@ export default function AboutPage() {
               <h3 className="text-3xl font-display uppercase text-dark">Tech Stack</h3>
               <div className="flex flex-wrap gap-3">
                 {['HTML', 'CSS', 'JS', 'TS', 'React Native', 'Flask', 'AWS', 'Framer', 'GSAP', 'PostgreSQL'].map((tech) => (
-                  <span key={tech} className="bg-dark text-light px-4 py-2 font-mono uppercase text-sm border-2 border-dark hover:bg-light hover:text-dark transition-colors">
+                  <span key={tech} className="bg-dark text-light px-4 py-2 font-mono uppercase text-sm border-2 border-dark hover:bg-light hover:text-dark active:bg-light active:text-dark transition-colors">
                     {tech}
                   </span>
                 ))}
@@ -133,15 +133,15 @@ export default function AboutPage() {
               className="flex flex-col sm:flex-row items-center justify-between gap-6 group"
             >
               <div className="flex items-center gap-6">
-                <div className="w-20 h-20 bg-dark flex items-center justify-center group-hover:bg-accent transition-colors">
-                  <Music className="text-light group-hover:text-dark" size={40} />
+                <div className="w-20 h-20 bg-dark flex items-center justify-center group-hover:bg-accent group-active:bg-accent transition-colors">
+                  <Music className="text-light group-hover:text-dark group-active:text-dark" size={40} />
                 </div>
                 <div>
                   <h3 className="text-2xl font-display uppercase text-dark">My Vibe</h3>
                   <p className="font-mono text-xl uppercase">Night Changes — One Direction</p>
                 </div>
               </div>
-              <div className="brutalist-button !text-lg !py-2 !px-6 group-hover:bg-dark group-hover:text-accent">
+              <div className="brutalist-button !text-lg !py-2 !px-6 group-hover:bg-dark group-hover:text-accent group-active:bg-dark group-active:text-accent">
                 Listen on Spotify
               </div>
             </a>
