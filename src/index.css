@@ -14,7 +14,7 @@
 
 @layer base {
   html {
-    scroll-behavior: smooth;
+    /* scroll-behavior: smooth; - Removed to avoid conflict with Lenis */
   }
   
   body {
