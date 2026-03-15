@@ -4,7 +4,7 @@
  */
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { motion, useScroll, useTransform, useMotionValueEvent } from 'motion/react';
+import { motion, useScroll, useTransform, useMotionValueEvent, useMotionValue, useSpring } from 'motion/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
@@ -187,14 +187,188 @@ const Navbar = () => {
   );
 };
 
+const InteractiveDataFlow = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const mouseRef = useRef({ x: 0, y: 0, active: false });
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let animationFrameId: number;
+    let particles: Particle[] = [];
+    const particleCount = 100;
+
+    class Particle {
+      x: number;
+      y: number;
+      size: number;
+      speedX: number;
+      speedY: number;
+      color: string;
+      life: number;
+
+      constructor(w: number, h: number) {
+        this.x = Math.random() * w;
+        this.y = Math.random() * h;
+        this.size = Math.random() * 2 + 1;
+        this.speedX = (Math.random() - 0.5) * 1;
+        this.speedY = (Math.random() - 0.5) * 1;
+        this.color = Math.random() > 0.5 ? '#00FF00' : '#FFFFFF';
+        this.life = Math.random() * 100;
+      }
+
+      update(w: number, h: number, mouse: { x: number; y: number; active: boolean }) {
+        this.x += this.speedX;
+        this.y += this.speedY;
+
+        if (mouse.active) {
+          const dx = mouse.x - this.x;
+          const dy = mouse.y - this.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          if (distance < 150) {
+            const force = (150 - distance) / 150;
+            this.speedX -= dx * force * 0.02;
+            this.speedY -= dy * force * 0.02;
+          }
+        }
+
+        // Friction
+        this.speedX *= 0.98;
+        this.speedY *= 0.98;
+
+        // Bounce
+        if (this.x < 0 || this.x > w) this.speedX *= -1;
+        if (this.y < 0 || this.y > h) this.speedY *= -1;
+
+        this.life -= 0.1;
+        if (this.life <= 0) {
+          this.x = Math.random() * w;
+          this.y = Math.random() * h;
+          this.life = Math.random() * 100;
+        }
+      }
+
+      draw(context: CanvasRenderingContext2D) {
+        context.fillStyle = this.color;
+        context.globalAlpha = this.life / 100;
+        context.fillRect(this.x, this.y, this.size, this.size);
+      }
+    }
+
+    const init = () => {
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+      particles = [];
+      for (let i = 0; i < particleCount; i++) {
+        particles.push(new Particle(canvas.width, canvas.height));
+      }
+    };
+
+    const animate = () => {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Draw Grid
+      ctx.strokeStyle = 'rgba(0, 255, 0, 0.05)';
+      ctx.lineWidth = 0.5;
+      const gridSize = 30;
+      for (let x = 0; x < canvas.width; x += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, canvas.height);
+        ctx.stroke();
+      }
+      for (let y = 0; y < canvas.height; y += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.stroke();
+      }
+
+      particles.forEach(p => {
+        p.update(canvas.width, canvas.height, mouseRef.current);
+        p.draw(ctx);
+      });
+
+      // Draw connections
+      ctx.strokeStyle = 'rgba(0, 255, 0, 0.1)';
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          if (distance < 80) {
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
+    init();
+    animate();
+
+    const handleResize = () => init();
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    mouseRef.current = {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+      active: true
+    };
+  };
+
+  return (
+    <div 
+      className="w-full h-full min-h-[400px] bg-dark relative overflow-hidden group cursor-crosshair"
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => mouseRef.current.active = true}
+      onMouseLeave={() => mouseRef.current.active = false}
+    >
+      <canvas ref={canvasRef} className="w-full h-full" />
+      
+      <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+        <div className="text-accent font-mono text-[10px] uppercase tracking-[0.5em] mb-4 opacity-20">Neural_Network_Active</div>
+        <div className="w-32 h-32 border border-accent/10 rounded-full flex items-center justify-center">
+          <div className="w-24 h-24 border border-accent/20 rounded-full animate-pulse flex items-center justify-center">
+            <Cpu className="text-accent/40" size={32} />
+          </div>
+        </div>
+      </div>
+
+      {/* Interactive Label */}
+      <div className="absolute bottom-6 left-6 font-mono text-[9px] text-accent/50 uppercase">
+        // Data_Flow_Simulation_v1.0.4<br/>
+        // Status: Operational
+      </div>
+    </div>
+  );
+};
+
 const Hero = () => {
   const heroRef = useRef<HTMLDivElement>(null);
 
   return (
     <section id="hero" ref={heroRef} className="min-h-screen flex flex-col items-center justify-center pt-24 sm:pt-32 pb-12 sm:pb-24 px-4 sm:px-6 bg-light">
       <div className="max-w-7xl w-full -translate-y-2 sm:-translate-y-3 lg:-translate-y-1">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 border-2 border-dark">
-          <div className="lg:col-span-12 p-6 sm:p-10 lg:py-12 flex flex-col justify-between">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 border-2 border-dark overflow-hidden">
+          <div className="lg:col-span-8 p-6 sm:p-10 lg:py-12 flex flex-col justify-between border-b-2 lg:border-b-0 lg:border-r-2 border-dark bg-light relative z-10">
             <div className="space-y-6 sm:space-y-8">
               <motion.span 
                 initial={{ opacity: 0, x: -20 }}
@@ -204,7 +378,7 @@ const Hero = () => {
               >
                 18 • // Student
               </motion.span>
-              <h1 className="text-[18vw] sm:text-[15vw] lg:text-[12vw] leading-[0.85] text-dark flex overflow-hidden">
+              <h1 className="text-[18vw] sm:text-[15vw] lg:text-[8vw] leading-[0.85] text-dark flex overflow-hidden">
                 {"ELLEN".split("").map((letter, i) => (
                   <motion.span
                     key={i}
@@ -225,7 +399,7 @@ const Hero = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 1.2 }}
-                className="text-2xl sm:text-4xl lg:text-6xl text-dark/80"
+                className="text-2xl sm:text-4xl lg:text-5xl text-dark/80"
               >
                 FULL-STACK <span className="text-accent bg-dark px-2">ENGINEER</span>
               </motion.h2>
@@ -247,6 +421,11 @@ const Hero = () => {
                 <a href="#contact-section" className="brutalist-button w-fit sm:w-auto text-lg sm:text-2xl text-center whitespace-nowrap">Start Project</a>
               </motion.div>
             </div>
+          </div>
+          
+          {/* Interactive Animation Area */}
+          <div className="lg:col-span-4 bg-dark min-h-[400px] lg:min-h-full">
+            <InteractiveDataFlow />
           </div>
         </div>
       </div>
