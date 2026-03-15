@@ -90,101 +90,110 @@ const ProjectPage = () => {
       </nav>
 
       <main className="pt-32 pb-24 px-4 sm:px-6 max-w-7xl mx-auto">
-        {/* Title Section */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-12 sm:mb-16">
-          <motion.h1 
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="text-5xl sm:text-8xl lg:text-[10rem] leading-none break-words"
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+          {/* Box 1: Title & Year (Top Left) */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="md:col-span-8 brutalist-card bg-light p-8 sm:p-12 flex flex-col justify-between min-h-[300px]"
           >
-            {project.title}
-          </motion.h1>
-          <motion.span 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="font-mono text-xl sm:text-3xl opacity-50"
-          >
-            {project.year}
-          </motion.span>
-        </div>
+            <div className="space-y-4">
+              <span className="font-mono text-sm uppercase tracking-widest bg-dark text-light px-2 py-1">
+                {project.category}
+              </span>
+              <h1 className="text-5xl sm:text-7xl lg:text-8xl leading-none break-words">
+                {project.title}
+              </h1>
+            </div>
+            <div className="flex justify-between items-end">
+              <span className="font-mono text-3xl sm:text-5xl opacity-20">{project.year}</span>
+              <div className="w-12 h-12 bg-accent border-2 border-dark" />
+            </div>
+          </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-          {/* Main Content: Image & Description */}
-          <div className="lg:col-span-8 space-y-12">
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="brutalist-card p-0 overflow-hidden aspect-video relative group"
+          {/* Box 2: Actions (Top Right) - Moved to last on mobile */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="md:col-span-4 brutalist-card bg-accent p-8 flex flex-col justify-between order-last md:order-none"
+          >
+            <h3 className="font-display text-2xl uppercase mb-8">Live Link</h3>
+            <a 
+              href={project.visitUrl} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="brutalist-button !bg-dark !text-accent flex items-center justify-center gap-2 text-xl py-6 group"
             >
-              <img 
-                src={project.image} 
-                alt={project.title}
-                className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
-                referrerPolicy="no-referrer"
-              />
-              <div className="absolute inset-0 border-4 border-dark pointer-events-none" />
-            </motion.div>
+              VISIT <ExternalLink className="group-hover:rotate-45 transition-transform" />
+            </a>
+            <div className="flex gap-4 mt-4">
+              <button className="flex-1 p-4 border-2 border-dark hover:bg-dark hover:text-accent transition-all flex justify-center">
+                <Github size={24} />
+              </button>
+              <button className="flex-1 p-4 border-2 border-dark hover:bg-dark hover:text-accent transition-all flex justify-center">
+                <Globe size={24} />
+              </button>
+            </div>
+          </motion.div>
 
-            <div className="space-y-8">
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-                className="space-y-4"
-              >
-                <span className="font-mono text-sm uppercase tracking-widest bg-dark text-light px-2 py-1">
-                  {project.category}
+          {/* Box 3: Main Image (Middle Left) */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2 }}
+            className="md:col-span-7 brutalist-card p-0 overflow-hidden aspect-video relative group"
+          >
+            <img 
+              src={project.image} 
+              alt={project.title}
+              className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-100 group-hover:scale-110"
+              referrerPolicy="no-referrer"
+            />
+            <div className="absolute inset-0 bg-dark/10 group-hover:bg-transparent transition-colors" />
+          </motion.div>
+
+          {/* Box 4: Technologies (Middle Right) */}
+          <motion.div 
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.3 }}
+            className="md:col-span-5 brutalist-card bg-light text-dark p-8 flex flex-col"
+          >
+            <h3 className="font-mono text-sm uppercase tracking-widest text-dark mb-6">// TECHNOLOGIES</h3>
+            <div className="flex flex-wrap gap-2 flex-1 content-start">
+              {project.tags.map((tag, i) => (
+                <span key={i} className="font-mono text-xs border border-dark/30 px-3 py-1 hover:bg-dark hover:text-light transition-colors">
+                  {tag}
                 </span>
-                <p className="text-xl sm:text-3xl leading-tight font-medium max-w-3xl">
+              ))}
+            </div>
+            <div className="mt-8 pt-6 border-t border-dark/20 flex justify-between items-center opacity-50">
+              <span className="text-[10px] font-mono">BUILD_V.2.0.4</span>
+              <div className="flex gap-1">
+                {[...Array(3)].map((_, i) => <div key={i} className="w-1 h-1 bg-dark" />)}
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Box 5: Description (Bottom) */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="md:col-span-12 brutalist-card bg-light p-8 sm:p-12"
+          >
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+              <div className="lg:col-span-4">
+                <h3 className="font-display text-3xl uppercase leading-none">THE <br />CHALLENGE</h3>
+              </div>
+              <div className="lg:col-span-8">
+                <p className="text-xl sm:text-3xl leading-tight font-medium">
                   {project.description}
                 </p>
-              </motion.div>
-
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-                className="space-y-4"
-              >
-                <h3 className="font-display text-2xl uppercase border-b-2 border-dark pb-2">Technologies</h3>
-                <div className="flex flex-wrap gap-3">
-                  {project.tags.map((tag, i) => (
-                    <span key={i} className="font-mono text-sm border-2 border-dark px-3 py-1 bg-gray">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </motion.div>
-            </div>
-          </div>
-
-          {/* Sidebar/Actions */}
-          <div className="lg:col-span-4 flex flex-col justify-end">
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="pt-8 border-t-2 lg:border-t-0 lg:border-l-2 border-dark lg:pl-8 flex flex-col gap-6"
-            >
-              <a 
-                href={project.visitUrl} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="brutalist-button flex items-center justify-center gap-2 text-xl sm:text-2xl w-full py-4 sm:py-6"
-              >
-                VISIT PROJECT <ExternalLink className="w-5 h-5 sm:w-6 sm:h-6" />
-              </a>
-              <div className="flex gap-4 justify-center lg:justify-start">
-                <button className="flex-1 p-4 sm:p-6 border-2 border-dark hover:bg-dark hover:text-accent transition-all flex justify-center">
-                  <Github className="w-6 h-6 sm:w-8 sm:h-8" />
-                </button>
-                <button className="flex-1 p-4 sm:p-6 border-2 border-dark hover:bg-dark hover:text-accent transition-all flex justify-center">
-                  <Globe className="w-6 h-6 sm:w-8 sm:h-8" />
-                </button>
               </div>
-            </motion.div>
-          </div>
+            </div>
+          </motion.div>
         </div>
       </main>
 
