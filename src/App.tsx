@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { motion, useScroll, useTransform, useMotionValueEvent } from 'motion/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -30,8 +30,10 @@ import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
+import { AnimatePresence } from 'motion/react';
 import AboutPage from './pages/AboutPage';
 import ProjectPage from './pages/ProjectPage';
+import Loader from './components/Loader';
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -69,10 +71,17 @@ const Navbar = () => {
         <motion.nav 
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
+          initial={{ y: -100, opacity: 0 }}
           animate={{
+            y: 0,
+            opacity: 1,
             width: isExpanded ? 'min(600px, 90vw)' : '100px',
           }}
-          transition={{ type: 'spring', stiffness: 200, damping: 25 }}
+          transition={{ 
+            y: { duration: 0.8, delay: 0.5 },
+            opacity: { duration: 0.8, delay: 0.5 },
+            width: { type: 'spring', stiffness: 200, damping: 25 }
+          }}
           className="hidden sm:flex bg-light text-dark border-2 border-dark items-center justify-between px-6 h-16 pointer-events-auto overflow-hidden"
         >
           <div className="flex items-center gap-2 whitespace-nowrap">
@@ -100,7 +109,12 @@ const Navbar = () => {
         </motion.nav>
 
         {/* Mobile Navbar */}
-        <div className="sm:hidden w-64 flex items-center justify-between bg-light text-dark border-2 border-dark px-4 h-14 pointer-events-auto">
+        <motion.div 
+          initial={{ y: -100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.5 }}
+          className="sm:hidden w-64 flex items-center justify-between bg-light text-dark border-2 border-dark px-4 h-14 pointer-events-auto"
+        >
           <span className="font-display text-xl tracking-tighter">ELLEN</span>
           <button 
             onClick={() => setIsMobileMenuOpen(true)}
@@ -108,7 +122,7 @@ const Navbar = () => {
           >
             <Menu size={24} />
           </button>
-        </div>
+        </motion.div>
       </div>
 
       {/* Mobile Menu Overlay */}
@@ -182,7 +196,14 @@ const Hero = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 border-2 border-dark">
           <div className="lg:col-span-12 p-6 sm:p-10 lg:py-12 flex flex-col justify-between">
             <div className="space-y-6 sm:space-y-8">
-              <span className="font-mono text-xs sm:text-sm uppercase tracking-widest bg-dark text-light px-2 py-1">18 • // Student</span>
+              <motion.span 
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 0.6 }}
+                className="font-mono text-xs sm:text-sm uppercase tracking-widest bg-dark text-light px-2 py-1 inline-block"
+              >
+                18 • // Student
+              </motion.span>
               <h1 className="text-[18vw] sm:text-[15vw] lg:text-[12vw] leading-[0.85] text-dark flex overflow-hidden">
                 {"ELLEN".split("").map((letter, i) => (
                   <motion.span
@@ -191,7 +212,7 @@ const Hero = () => {
                     animate={{ y: 0 }}
                     transition={{
                       duration: 0.8,
-                      delay: i * 0.1,
+                      delay: 0.8 + (i * 0.1),
                       ease: [0.33, 1, 0.68, 1]
                     }}
                     className="inline-block"
@@ -200,15 +221,31 @@ const Hero = () => {
                   </motion.span>
                 ))}
               </h1>
-              <h2 className="text-2xl sm:text-4xl lg:text-6xl text-dark/80">
+              <motion.h2 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 1.2 }}
+                className="text-2xl sm:text-4xl lg:text-6xl text-dark/80"
+              >
                 FULL-STACK <span className="text-accent bg-dark px-2">ENGINEER</span>
-              </h2>
+              </motion.h2>
             </div>
             <div className="mt-12 sm:mt-20 flex flex-col sm:flex-row gap-6 sm:gap-8 items-start sm:items-center">
-              <p className="max-w-md font-sans text-lg sm:text-xl font-medium leading-tight">
+              <motion.p 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.8, delay: 1.4 }}
+                className="max-w-md font-sans text-lg sm:text-xl font-medium leading-tight"
+              >
                 Building high-performance digital systems with brutalist precision and modern aesthetics.
-              </p>
-              <a href="#contact-section" className="brutalist-button w-fit sm:w-auto text-lg sm:text-2xl text-center whitespace-nowrap">Start Project</a>
+              </motion.p>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: 1.6 }}
+              >
+                <a href="#contact-section" className="brutalist-button w-fit sm:w-auto text-lg sm:text-2xl text-center whitespace-nowrap">Start Project</a>
+              </motion.div>
             </div>
           </div>
         </div>
@@ -218,7 +255,12 @@ const Hero = () => {
 };
 
 const Marquee = () => (
-  <div className="marquee-container">
+  <motion.div 
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    transition={{ duration: 1, delay: 1.8 }}
+    className="marquee-container"
+  >
     <div className="marquee-content">
       {[...Array(10)].map((_, i) => (
         <span key={i} className="mx-8">
@@ -226,7 +268,7 @@ const Marquee = () => (
         </span>
       ))}
     </div>
-  </div>
+  </motion.div>
 );
 
 const Work = () => {
@@ -242,27 +284,40 @@ const Work = () => {
   return (
     <section id="work-section" className="py-16 sm:py-24 px-4 sm:px-6 bg-light">
       <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-end mb-12 sm:mb-16">
+        <motion.div 
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="flex justify-between items-end mb-12 sm:mb-16"
+        >
           <h2 className="text-6xl sm:text-8xl lg:text-[10rem]">WORK</h2>
           <span className="font-mono text-base sm:text-xl">01 — 06</span>
-        </div>
+        </motion.div>
         <div className="space-y-0 border-t-2 border-dark">
           {projects.map((project, i) => (
-            <Link 
-              key={i} 
-              to={`/project/${project.slug}`}
-              className="group border-b-2 border-dark py-8 sm:py-12 flex flex-col md:flex-row justify-between items-start md:items-center hover:bg-dark hover:text-light active:bg-dark active:text-light transition-colors px-2 sm:px-4 cursor-pointer block"
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: i * 0.1 }}
             >
-              <div className="flex items-center gap-4 sm:gap-8">
-                <span className="font-mono text-lg sm:text-xl opacity-50">0{i + 1}</span>
-                <h3 className="text-3xl sm:text-5xl lg:text-7xl">{project.title}</h3>
-              </div>
-              <div className="flex items-center gap-6 sm:gap-12 mt-4 md:mt-0">
-                <span className="font-mono text-xs sm:text-sm uppercase tracking-widest">{project.category}</span>
-                <span className="font-mono text-sm sm:text-base">{project.year}</span>
-                <ArrowRight className="group-hover:translate-x-2 group-active:translate-x-2 transition-transform w-5 h-5 sm:w-6 sm:h-6" />
-              </div>
-            </Link>
+              <Link 
+                to={`/project/${project.slug}`}
+                className="group border-b-2 border-dark py-8 sm:py-12 flex flex-col md:flex-row justify-between items-start md:items-center hover:bg-dark hover:text-light active:bg-dark active:text-light transition-colors px-2 sm:px-4 cursor-pointer block"
+              >
+                <div className="flex items-center gap-4 sm:gap-8">
+                  <span className="font-mono text-lg sm:text-xl opacity-50">0{i + 1}</span>
+                  <h3 className="text-3xl sm:text-5xl lg:text-7xl">{project.title}</h3>
+                </div>
+                <div className="flex items-center gap-6 sm:gap-12 mt-4 md:mt-0">
+                  <span className="font-mono text-xs sm:text-sm uppercase tracking-widest">{project.category}</span>
+                  <span className="font-mono text-sm sm:text-base">{project.year}</span>
+                  <ArrowRight className="group-hover:translate-x-2 group-active:translate-x-2 transition-transform w-5 h-5 sm:w-6 sm:h-6" />
+                </div>
+              </Link>
+            </motion.div>
           ))}
         </div>
       </div>
@@ -281,7 +336,15 @@ const Stack = () => {
   return (
     <section id="stack-section" className="py-16 sm:py-24 px-4 sm:px-6 bg-dark text-light">
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-6xl sm:text-8xl lg:text-[10rem] mb-12 sm:mb-20 text-accent">STACK</h2>
+        <motion.h2 
+          initial={{ opacity: 0, x: -50 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="text-6xl sm:text-8xl lg:text-[10rem] mb-12 sm:mb-20 text-accent"
+        >
+          STACK
+        </motion.h2>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 sm:gap-20">
           <div className="space-y-8 sm:space-y-12">
             {items.map((item, i) => (
@@ -302,7 +365,13 @@ const Stack = () => {
               </div>
             ))}
           </div>
-          <div className="brutalist-card bg-accent text-dark flex flex-col justify-between p-8 sm:p-12">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="brutalist-card bg-accent text-dark flex flex-col justify-between p-8 sm:p-12"
+          >
             <h3 className="text-4xl sm:text-6xl leading-none">ALWAYS <br />LEARNING. <br />ALWAYS <br />BUILDING.</h3>
             <div className="mt-6 sm:mt-8">
               <p className="font-mono text-lg sm:text-xl mb-6">
@@ -312,7 +381,7 @@ const Stack = () => {
                 More About Me
               </Link>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>
@@ -321,12 +390,18 @@ const Stack = () => {
 
 const Contact = () => (
   <section id="contact-section" className="py-16 sm:py-24 px-4 sm:px-6 bg-light">
-    <div className="max-w-7xl mx-auto border-2 border-dark p-8 sm:p-12 flex flex-col lg:flex-row justify-between items-center gap-10 sm:gap-12">
+    <motion.div 
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.8 }}
+      className="max-w-7xl mx-auto border-2 border-dark p-8 sm:p-12 flex flex-col lg:flex-row justify-between items-center gap-10 sm:gap-12"
+    >
       <h2 className="text-6xl sm:text-7xl lg:text-9xl leading-none text-center lg:text-left">LET'S <br />CONNECT</h2>
       <div className="space-y-6 sm:space-y-8 w-full lg:w-auto text-center lg:text-left">
         <div className="flex flex-col gap-2">
           <span className="font-mono uppercase text-xs sm:text-sm opacity-50">Email</span>
-          <a href="mailto:ellen@dev.com" className="text-3xl sm:text-4xl lg:text-6xl hover:text-accent active:text-accent transition-colors break-all">elisapravin@gmail.com</a>
+          <a href="mailto:ellen@dev.com" className="text-3xl sm:text-4xl lg:text-6xl hover:text-accent active:text-accent transition-colors break-all">ELLEN@DEV.COM</a>
         </div>
         <div className="flex gap-4 sm:gap-8 justify-center lg:justify-start">
           {[Github, Twitter, Linkedin].map((Icon, i) => (
@@ -336,12 +411,18 @@ const Contact = () => (
           ))}
         </div>
       </div>
-    </div>
+    </motion.div>
   </section>
 );
 
 const Footer = () => (
-  <footer className="py-12 px-6 bg-dark text-light border-t-2 border-dark">
+  <motion.footer 
+    initial={{ opacity: 0 }}
+    whileInView={{ opacity: 1 }}
+    viewport={{ once: true }}
+    transition={{ duration: 1 }}
+    className="py-12 px-6 bg-dark text-light border-t-2 border-dark"
+  >
     <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8 font-mono">
       <span>© {new Date().getFullYear()} ELLEN.DEV</span>
       <div className="flex gap-12">
@@ -351,7 +432,7 @@ const Footer = () => (
       </div>
       <span className="text-accent">BUILT WITH PRECISION</span>
     </div>
-  </footer>
+  </motion.footer>
 );
 
 const HomePage = () => {
@@ -371,8 +452,20 @@ const HomePage = () => {
 export default function App() {
   const location = useLocation();
   const lenisRef = useRef<Lenis | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const handleLoadingComplete = useCallback(() => {
+    console.log("Loading complete, transitioning to content...");
+    setIsLoading(false);
+  }, []);
 
   useEffect(() => {
+    console.log("App mounted, isLoading:", isLoading);
+  }, [isLoading]);
+
+  useEffect(() => {
+    if (isLoading) return;
+
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -414,9 +507,11 @@ export default function App() {
       clearTimeout(timer);
       document.removeEventListener('click', handleAnchorClick);
     };
-  }, []);
+  }, [isLoading]);
 
   useEffect(() => {
+    if (isLoading) return;
+
     if (location.hash && lenisRef.current) {
       // Small delay to ensure the DOM is ready if navigating between pages
       setTimeout(() => {
@@ -427,15 +522,28 @@ export default function App() {
         lenisRef.current?.scrollTo(0, { immediate: true });
       }, 50);
     }
-  }, [location.pathname, location.hash]);
+  }, [location.pathname, location.hash, isLoading]);
 
   return (
     <div className="min-h-screen selection:bg-accent selection:text-dark">
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/project/:slug" element={<ProjectPage />} />
-      </Routes>
+      <AnimatePresence mode="wait">
+        {isLoading ? (
+          <Loader key="loader" onComplete={handleLoadingComplete} />
+        ) : (
+          <motion.div
+            key="content"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+          >
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/about" element={<AboutPage />} />
+              <Route path="/project/:slug" element={<ProjectPage />} />
+            </Routes>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
