@@ -423,8 +423,8 @@ const Hero = () => {
             </div>
           </div>
           
-          {/* Interactive Animation Area */}
-          <div className="lg:col-span-4 bg-dark min-h-[400px] lg:min-h-full">
+          {/* Interactive Animation Area - Hidden on mobile */}
+          <div className="hidden lg:block lg:col-span-4 bg-dark lg:min-h-full">
             <InteractiveDataFlow />
           </div>
         </div>
